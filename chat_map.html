@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>chat_map</title>
+    <style>
+
+    </style>
+</head>
+
+<body>
+
+    <p><button onclick="getMyPlace()">現在位置を取得</button></p>
+    <div id="result"></div>
+    <div id="map" style="width:100%;height:300px;"></div>
+
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+    <script async
+        src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBmGF3dVLMa7VD_zf0gDbbPEs0RNBb5-WE&callback=initMap">
+        </script>
+
+    <script>
+
+        function getMyPlace() {
+            let output = document.getElementById("result");
+            if (!navigator.geolocation) {//apiがサポートされていない場合
+                output.innerHTML = "<p>APIkeyを取得して下さい。</p>";
+                return;
+            }
+
+            function success(position) {
+                let latitude = position.coords.latitude;//緯度
+                let longitude = position.coords.longitude;//経度
+
+
+                let latlng = new google.maps.LatLng(latitude, longitude);// 位置情報
+
+                //位置情報をGoogle Mapsに反映
+                let map = new google.maps.Map(document.getElementById('map'), {
+                    zoom: 15,// ズーム値
+                    center: latlng,// 中心座標
+                });
+
+
+
+
+                //マーカーの新規出力
+                new google.maps.Marker({
+                    map: map,
+                    position: latlng,
+                });
+
+            };
+
+
+            function showError(error) {
+                const errorMessages = [
+                    "位置情報が許可されてません",
+                    "現在位置を特定できません",
+                    "位置情報を取得する前にタイムアウトになりました",
+                ];
+                alert(`error:${errorMessages[error.code - 1]}`);
+            };
+
+
+            navigator.geolocation.getCurrentPosition(success, showError);//位置情報を取得する（情報取得の成功と失敗を判定する）
+        }
+
+
+    </script>
+
+
+
+
+</body>
+
+</html>

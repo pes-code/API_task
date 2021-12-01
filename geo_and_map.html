@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="ja">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>位置情報取得&map表示</title>
+  <style>
+    html,
+    body {
+      height: 100%;
+      margin: 0;
+      padding: 0;
+    }
+
+    #map {
+      height: calc(100% - 102px);
+      margin: 0;
+      padding: 0;
+    }
+  </style>
+</head>
+
+<body>
+  <h1>位置情報取得&Map表示</h1>
+  <div id="map"></div>
+
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+  <script
+    src='https://www.bing.com/api/maps/mapcontrol?key=AsW9at7Q3MvXAYIMNixEFG9oqv8TBoCsqiOg8pSMhBM0RUfESFVjr2kcHYuNLts9'
+    async defer></script>
+
+  <script>
+    // マップ情報格納用の変数
+    let map;
+
+    // マップピンを立てる関数を定義する　※マップ表示処理(※1)の関数よりも前に以下の関数を定義しないと※1内のpushPin()が発動しない
+    function pushPin(lat, lng, map) {
+      const location = new Microsoft.Maps.Location(lat, lng);//Microsoftのフォーマットに変換する。
+      const pin = new Microsoft.Maps.Pushpin(location, {//マップピンの位置、色、表示設定を指定する。
+        color: "navy",
+        visible: true,
+      });
+      map.entities.push(pin);//入力されたマプピンをマップ上に配置する。
+    }
+
+    //マップ上に吹き出し(informationbox)を表示する関数を定義する。
+    function generateInfobox(lat, lng, map) {
+      const location = new Microsoft.Maps.Location(lat, lng);
+      const infobox = new Microsoft.Maps.Infobox(location, {
+        title: `現在地`,
+        description: "ここだよーん",
+      });
+      infobox.setMap(map);
+    }
+
+    const option = {
+      enableHighAccuracy: true,
+      maximumAge: 20000,
+      timeout: 1000000,
+    };
+
+
+    function showError(error) {
+      const errorMessages = [
+        "位置情報が許可されてません",
+        "現在位置を特定できません",
+        "位置情報を取得する前にタイムアウトになりました",
+      ];
+      alert(`error:${errorMessages[error.code - 1]}`);
+    };
+
+    window.onload = function () {
+      navigator.geolocation.getCurrentPosition(mapsInit, showError, option);
+    };
+
+    // この後マップ表示の処理を書き込む※1
+    function mapsInit(position) {
+      const lat = position.coords.latitude;
+      const lng = position.coords.longitude;
+
+      map = new Microsoft.Maps.Map("#map", {
+        center: {
+          latitude: lat,
+          longitude: lng,
+        },
+        zoom: 15,
+      });
+      pushPin(lat, lng, map);//定義したマップピンを立てる関数を実行する
+      generateInfobox(lat, lng, map);//定義した吹き出しのマップ上表示を実行する
+    }
+
+
+  </script>
+
+</body>
+
+</html>
