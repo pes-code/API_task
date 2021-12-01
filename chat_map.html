@@ -7,13 +7,12 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>chat_map</title>
     <style>
-
     </style>
 </head>
 
 <body>
 
-    <p><button onclick="getMyPlace()">現在位置を取得</button></p>
+    <p><button onclick="getMyPlace()">HELPを出す</button></p>
     <div id="result"></div>
     <div id="map" style="width:100%;height:300px;"></div>
 
@@ -42,16 +41,24 @@
                 let map = new google.maps.Map(document.getElementById('map'), {
                     zoom: 15,// ズーム値
                     center: latlng,// 中心座標
+                    mapTypeId: "terrain"///,satellite,hybrid,
                 });
-
-
-
 
                 //マーカーの新規出力
                 new google.maps.Marker({
                     map: map,
                     position: latlng,
                 });
+
+
+                ////////////////////////////
+                infoWindow = new google.maps.InfoWindow({ // 吹き出しの追加
+                    content: '<div class=""></div>' // 吹き出しに表示する内容
+                });
+                marker.addListener('click', function () { // マーカーをクリックしたとき
+                    infoWindow.open(map, marker); // 吹き出しの表示
+                });
+                ////////////////////////////
 
             };
 
