@@ -23,6 +23,14 @@
 
     <script>
 
+        /////お助けマップ/////マップ上にSOS内容（助けて欲しいこと）とSOS発信している場所を表示する
+
+        //////////GoogleMapを表示する【Clear】
+        //////////現在地情報を取得する【Clear】
+        //////////現在地に吹き出しを表示する
+        //////////吹き出しにText入力できるようにする
+        //////////表示をデバイス間で共有できるようにする
+
         function getMyPlace() {
             let output = document.getElementById("result");
             if (!navigator.geolocation) {//apiがサポートされていない場合
